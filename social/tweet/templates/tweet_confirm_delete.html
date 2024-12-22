@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-900 text-white flex items-start justify-center pt-8 px-3 sm:px-4 lg:px-6">
+    <div class="max-w-sm w-full space-y-6">
+        <h1 class="text-2xl text-orange-600 tracking-widest my-4 font-bold text-center">
+            Django Confirm Delete
+        </h1>
+<div>
+    <p class="text-lg mb-4 text-center">Are you sure you want to delete this tweet?</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="flex justify-between">
+                    <a href="{% url 'tweet_list' %}" class="flex w-full disabled:opacity-40 disabled:cursor-not-allowed justify-center rounded-xl group mt-3">
+                        <div class="relative min-w-36 min-h-fit px-3 overflow-hidden flex gap-2 w-fit justify-center py-1.5 items-center bg-blue-500 bg-opacity-20 rounded-xl border border-blue-500 border-opacity-50 backdrop-blur-md font-semibold text-[14px] text-blue-400">
+                            Back
+                        </div>
+                    </a> 
+
+                    <button type="submit" class="flex w-full disabled:opacity-40 disabled:cursor-not-allowed justify-center rounded-xl group mt-3">
+                        <div class="relative min-w-36 min-h-fit px-3 overflow-hidden flex gap-2 w-fit justify-center py-1.5 items-center bg-red-500 bg-opacity-20 rounded-xl border border-red-500 border-opacity-50 backdrop-blur-md font-semibold text-[14px] text-red-400">
+                            Confirm Delete
+                        </div>
+                    </button>  
+                </div>
+            </form>
+</div>
+        <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+            <div class="relative w-full bg-white overflow-hidden rounded-lg max-h-64 shadow-md">
+                {% if tweet.photo %}
+                    <img class="w-full h-48 object-cover" src="{{ tweet.photo.url }}" alt="tweet photo">
+                {% else %}
+                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500 italic">
+                        No Image Available
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="my-4 text-center text-white">
+                <h2 class="font-bold text-2xl tracking-wide">{{ tweet.user.username }}</h2>
+                <hr class="my-2 border-gray-600" />
+                <p class="text-sm p-3 rounded-lg bg-gray-900 bg-opacity-45 backdrop-blur-md text-gray-300">
+                    {{ tweet.text }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

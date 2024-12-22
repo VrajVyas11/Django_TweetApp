@@ -1,0 +1,131 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+        Django Social Media
+        {% endblock %}
+    </title>
+    {% tailwind_css %}
+</head>
+
+<body class="font-sans leading-7 tracking-wide bg-black text-white">
+    <!-- Mobile Sidebar -->
+    <!-- Hamburger Menu for Mobile -->
+    <div class="lg:hidden absolute top-4 right-4 z-50">
+        <button id="open-sidebar" class="text-white text-3xl">
+            &#9776; <!-- This is the hamburger menu icon -->
+        </button>
+    </div>
+    <div class="lg:hidden fixed inset-0  bg-black bg-opacity-80 z-50 hidden" id="sidebar-overlay">
+        <div class="flex fixed justify-end top-0 right-4 p-4">
+            <button id="close-sidebar" class="text-white text-4xl font-bold hover:text-gray-400 transition duration-300 ease-in-out transform hover:scale-110">
+                &times;
+            </button>
+        </div>
+        <nav class="bg-black h-screen text-white w-full rounded-3xl overflow-hidden p-8 space-y-6 shadow-lg">
+            <ul class="space-y-6 mt-10 text-xl font-medium">
+                <li><a href="#" class="hover:text-gray-300 font-bold tracking-wide transform hover:scale-105 transition duration-300">Home</a></li>
+                <li><a href="#about" class="hover:text-gray-300 font-bold tracking-wide transform hover:scale-105 transition duration-300">About</a></li>
+                <li><a href="#services" class="hover:text-gray-300 font-bold tracking-wide transform hover:scale-105 transition duration-300">Services</a></li>
+                <li><a href="#contact" class="hover:text-gray-300 font-bold tracking-wide transform hover:scale-105 transition duration-300">Contact</a></li>
+                <div class="flex flex-col gap-8">
+                    <a href="{% url 'tweet_list' %}"
+                        class="relative min-w-28 mt-10 text-center min-h-fit px-4 py-2 bg-blue-500 bg-opacity-20 rounded-2xl border-2 border-blue-500 text-blue-400 hover:bg-blue-600 hover:text-white transition duration-300">
+                        Tweet Home
+                    </a>
+    
+                    {% if user.is_authenticated %}
+                    <form class="w-full" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="relative w-full min-w-28 min-h-fit px-4 py-2 bg-red-500 bg-opacity-20 rounded-2xl border-2 border-red-500 text-red-400 hover:bg-red-600 hover:text-white transition duration-300">
+                            Logout
+                        </button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'login' %}"
+                        class="relative min-w-28 min-h-fit text-center px-4 py-2 bg-orange-500 bg-opacity-20 rounded-2xl border-2 border-orange-500 text-orange-400 hover:bg-orange-600 hover:text-white transition duration-300">
+                        Login
+                    </a>
+    
+                    <a href="{% url 'register' %}"
+                        class="relative min-w-28 text-center min-h-fit px-4 py-2 bg-green-500 bg-opacity-20 rounded-2xl border-2 border-green-500 text-green-400 hover:bg-green-600 hover:text-white transition duration-300">
+                        Register
+                    </a>
+                    {% endif %}
+                </div>
+            </ul>
+        </nav>
+    </div>
+    
+
+    <!-- Main Navigation for Large Screens -->
+    <nav class="bg-blue-950 bg-opacity-45 backdrop-blur-md p-3 lg:flex hidden">
+        <div class="mx-auto flex justify-between items-center w-full">
+            <div class="text-white text-2xl font-semibold">
+                <a href="#" class="hover:text-gray-300">TweetBar</a>
+            </div>
+            <ul class="flex space-x-6 text-white">
+                <li><a href="#" class="hover:text-gray-300">Home</a></li>
+                <li><a href="#about" class="hover:text-gray-300">About</a></li>
+                <li><a href="#services" class="hover:text-gray-300">Services</a></li>
+                <li><a href="#contact" class="hover:text-gray-300">Contact</a></li>
+            </ul>
+            <div class="flex gap-2">
+                <a href="{% url 'tweet_list' %}"
+                    class="relative min-w-28 min-h-fit px-4 py-2 bg-blue-500 bg-opacity-20 rounded-2xl border-2 border-blue-500 text-blue-400 hover:bg-blue-600 hover:text-white transition duration-300">
+                    Tweet Home
+                </a>
+
+                {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="relative min-w-28 min-h-fit px-4 py-2 bg-red-500 bg-opacity-20 rounded-2xl border-2 border-red-500 text-red-400 hover:bg-red-600 hover:text-white transition duration-300">
+                        Logout
+                    </button>
+                </form>
+                {% else %}
+                <a href="{% url 'login' %}"
+                    class="relative min-w-28 min-h-fit text-center px-4 py-2 bg-orange-500 bg-opacity-20 rounded-2xl border-2 border-orange-500 text-orange-400 hover:bg-orange-600 hover:text-white transition duration-300">
+                    Login
+                </a>
+
+                <a href="{% url 'register' %}"
+                    class="relative min-w-28 text-center min-h-fit px-4 py-2 bg-green-500 bg-opacity-20 rounded-2xl border-2 border-green-500 text-green-400 hover:bg-green-600 hover:text-white transition duration-300">
+                    Register
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="text-3xl font-bold">
+        {% block content %}
+        content
+        {% endblock %}
+    </div>
+
+    <!-- Scripts for Mobile Sidebar -->
+    <script>
+        const openSidebar = document.getElementById("open-sidebar");
+        const closeSidebar = document.getElementById("close-sidebar");
+        const sidebarOverlay = document.getElementById("sidebar-overlay");
+
+        openSidebar.addEventListener("click", () => {
+            sidebarOverlay.classList.remove("hidden");
+        });
+
+        closeSidebar.addEventListener("click", () => {
+            sidebarOverlay.classList.add("hidden");
+        });
+    </script>
+</body>
+
+</html>
